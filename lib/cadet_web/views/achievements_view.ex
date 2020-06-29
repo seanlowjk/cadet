@@ -1,9 +1,6 @@
 defmodule CadetWeb.AchievementsView do
-  
   use CadetWeb, :view
   use Timex
-
-  import CadetWeb.AssessmentsHelpers
 
   def render("index.json", %{achievements: achievements}) do
     render_many(achievements, CadetWeb.AchievementsView, "overview.json", as: :achievement)
@@ -29,14 +26,14 @@ defmodule CadetWeb.AchievementsView do
     })
   end
 
-  def render("progress.json", %(achievement_progresses: achievement_progresses)) do
-    render_many(achievements, CadetWeb.AchievementsView, "progress_entry.json", as: :achievement_progress)
+  def render("progress.json", %{achievement_progresses: achievement_progresses}) do
+    render_many(achievement_progresses, CadetWeb.AchievementsView, "progress_entry.json", as: :achievement_progress)
   end 
 
-  def render("progress_entry.json", %(achievement_progress: achievement_progress)) do
+  def render("progress_entry.json", %{achievement_progress: achievement_progress}) do
     transform_map_for_view(achievement_progress, %{
-      progres: progress, 
       completion_text: :completion_text, 
+      progress: :progress, 
 
       achievement_id: :achievement_id, 
       student_id: :student_id

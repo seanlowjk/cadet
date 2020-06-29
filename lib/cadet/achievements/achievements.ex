@@ -45,15 +45,15 @@ defmodule Cadet.Achievements do
   end 
 
   def get_achievement_progress(student_id) do
-    Cadet.Repo.all(from progress in AchievementProgress, where progress.student_id == ^student_id)
+    Cadet.Repo.all(from p in AchievementProgress, where: p.student_id == ^student_id)
   end
 
   def add_achievement_progress(user_id, achievement_id) do
     Cadet.Repo.insert(
-      %Achievement{
-        student: user_id
-        achievement: achievement_id
-      )
+      %AchievementProgress{
+        student_id: user_id, 
+        achievement_id: achievement_id
+      }
     )
 
     :ok
@@ -65,8 +65,8 @@ defmodule Cadet.Achievements do
       and achievement_progress.achievement_id == ^achievement_id )
       |>  Cadet.Repo.update_all(
         set: [
-          progress: achievement_progress["progress"]
-          completion_text: achievement_progress["completionText"]
+          progress: progress_params["progress"], 
+          completion_text: progress_params["completionText"]
         ]
       )
 

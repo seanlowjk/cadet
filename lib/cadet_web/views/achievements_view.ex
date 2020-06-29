@@ -22,12 +22,24 @@ defmodule CadetWeb.AchievementsView do
       isTask: :is_task, 
       prerequisiteIds: :prerequisite_ids, 
       goal: :goal, 
-      progress: :progress, 
 
       modalImageUrl: :modal_image_url, 
       description: :description, 
-      goalText: :goal_text, 
-      completionText: :completion_text
+      goalText: :goal_text
     })
   end
+
+  def render("progress.json", %(achievement_progresses: achievement_progresses)) do
+    render_many(achievements, CadetWeb.AchievementsView, "progress_entry.json", as: :achievement_progress)
+  end 
+
+  def render("progress_entry.json", %(achievement_progress: achievement_progress)) do
+    transform_map_for_view(achievement_progress, %{
+      progres: progress, 
+      completion_text: :completion_text, 
+
+      achievement_id: :achievement_id, 
+      student_id: :student_id
+    })
+  end 
 end

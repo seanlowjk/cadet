@@ -5,7 +5,8 @@ defmodule Cadet.Achievements do
   
   use Cadet, [:context, :display]
 
-  alias Cadet.Achievements.Achievement
+  alias Cadet.Accounts.User
+  alias Cadet.Achievements.{Achievement, AchievementProgress}
 
   import Ecto.Query
 
@@ -33,17 +34,44 @@ defmodule Cadet.Achievements do
         is_task: new_achievement["isTask"], 
         prerequisite_ids: new_achievement["prerequisiteIds"], 
         goal: new_achievement["completionGoal"], 
-        progress: new_achievement["completionProgress"], 
   
         modal_image_url: new_achievement["modal"]["modalImageUrl"], 
         description: new_achievement["modal"]["description"], 
-        goal_text: new_achievement["modal"]["goalText"], 
-        completion_text: new_achievement["modal"]["completionText"]
+        goal_text: new_achievement["modal"]["goalText"]
       }
     )
 
     :ok
   end 
+
+  def get_achievement_progress(student_id) do
+    Cadet.Repo.all(from progress in AchievementProgress, where progress.student_id == ^student_id)
+  end
+
+  def add_achievement_progress(user_id, achievement_id) do
+    Cadet.Repo.insert(
+      %Achievement{
+        student: user_id
+        achievement: achievement_id
+      )
+    )
+
+    :ok
+  end
+
+  def update_achievement_progress(user_id, achievement_id, progress_params) do
+    from(achievement_progress in AchievementProgress, 
+      where: achievement_progress.student_id == ^user_id 
+      and achievement_progress.achievement_id == ^achievement_id )
+      |>  Cadet.Repo.update_all(
+        set: [
+          progress: achievement_progress["progress"]
+          completion_text: achievement_progress["completionText"]
+        ]
+      )
+
+    :ok
+  end
 
   def update_achievement(new_achievement) do 
     from(achievement in Achievement, where: achievement.inferencer_id == ^new_achievement["id"])
@@ -56,12 +84,10 @@ defmodule Cadet.Achievements do
           is_task: new_achievement["isTask"], 
           prerequisite_ids: new_achievement["prerequisiteIds"], 
           goal: new_achievement["completionGoal"], 
-          progress: new_achievement["completionProgress"], 
     
           modal_image_url: new_achievement["modal"]["modalImageUrl"], 
           description: new_achievement["modal"]["description"], 
-          goal_text: new_achievement["modal"]["goalText"], 
-          completion_text: new_achievement["modal"]["completionText"]
+          goal_text: new_achievement["modal"]["goalText"]
         ]
       )
 

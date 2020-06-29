@@ -71,6 +71,48 @@ defmodule CadetWeb.AchievementsController do
     end
   end
 
+  def get_progress(conn, %{"student_id" => student_id}) do
+    result = Achievements.get_achievement_progress(student_id)
+
+    case result do
+      :ok->
+        text(conn, "OK")
+
+      {:error, {status, message}} ->
+        conn
+        |> put_status(status)
+        |> text(message)
+    end
+  end
+
+  def add_progress(conn, %{"student_id" => student_id, "achieveent_id" => achievement_id}) do
+    result = Achievements.add_achievement_progress(student_id, achievement_id)
+
+    case result do
+      :ok->
+        text(conn, "OK")
+
+      {:error, {status, message}} ->
+        conn
+        |> put_status(status)
+        |> text(message)
+    end
+  end
+
+  def update_progress(conn, %{"student_id" => student_id, "achieveent_id" => achievement_id, "progress" => progress}) do
+    result = Achievements.update_achievement_progress(student_id, achievement_id, progress)
+
+    case result do
+      :ok->
+        text(conn, "OK")
+
+      {:error, {status, message}} ->
+        conn
+        |> put_status(status)
+        |> text(message)
+    end
+  end
+
   swagger_path :index do
     get("/achievements")
 
@@ -90,90 +132,68 @@ defmodule CadetWeb.AchievementsController do
             title(
               :string,
               "title of the achievement"
-
             )
 
             ability(
               AchievementAbility,
               "ability"
-
             )
 
             icon(
               :string,
               "icon name"
-
             )
 
             inferencer_id(
               :integer,
               "id used for reference by inferencer"
-
             )
 
             exp(
               :integer,
               "exp awarded for the achievement"
-
             )
 
             open_at(
               :string,
               "open date of achievement"
-
             )
 
             close_at(
               :string,
               "close date of achievement"
-
             )
 
             is_task(
               :boolean,
               "if the achievement is a task or not"
-
             )
 
             prerequisite_ids(
               :array,
-              "id of the prerequisites of the achievement"
+              "id of the prerequisites of the achievement"            
             )
 
             goal(
               :integer,
               "goal value"
-
             )
 
-            progress(
-              :integer,
-              "progress of the achievement"
-
-            )
 
             modal_image_url(
               :string,
               "url of the image for the modal"
-
             )
 
             description(
               :string,
-              "description of the achievement"
+              "description of the achievement"            
             )
 
             goal_text(
               :string,
-              "text to reach the goal of the achievement"
+              "text to reach the goal of the achievement"            
             )
-
-            completion_text(
-              :string,
-              "text to show when goal is met"
-            )
-
-
           end
         end
     }

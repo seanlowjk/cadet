@@ -18,19 +18,17 @@ defmodule Cadet.Achievements.Achievement do
     field(:is_task, :boolean, default: false)
     field(:prerequisite_ids, {:array, :integer})
     field(:goal, :integer, default: 0)
-    field(:progress, :integer, default: 0)
 
     field(:modal_image_url, :string, default: "https://dummyimage.com/300.png/09f/fff")
     field(:description, :string, default: "Description")
     field(:goal_text, :string, default: "Goal")
-    field(:completion_text, :string, default: "Completion")
 
     timestamps()
   end
 
-  @required_fields ~w(title ability exp is_task goal progress)a
+  @required_fields ~w(title ability exp is_task goal)a
   @optional_fields ~w(icon open_at close_at prerequisite_ids
-    modal_image_url description goal_text completion_text)a
+    modal_image_url description goal_text)a
 
   def changeset(assessment, params) do
     params =
@@ -39,7 +37,6 @@ defmodule Cadet.Achievements.Achievement do
       |> convert_date(:close_at)
 
     assessment
-    |> cast_attachments(params, @optional_file_fields)
     |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
     |> validate_open_close_date

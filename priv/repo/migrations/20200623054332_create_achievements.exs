@@ -17,11 +17,9 @@ defmodule Cadet.Repo.Migrations.CreateAchievements do
       add(:is_task, :boolean)
       add(:prerequisite_ids, {:array, :integer})
       add(:goal, :integer)
-      add(:progress, :integer)
       add(:modal_image_url, :string)
       add(:description, :string)
       add(:goal_text, :text)
-      add(:completion_text, :text)
 
       timestamps()
     end
